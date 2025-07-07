@@ -47,6 +47,9 @@ def Paste_mask(image_path = None,
         if pure_background_path:
             back_image = get_image(pure_background_path, postfix = None)
             img_paths.extend(back_image)
+            img_paths = back_image
+            annos = []
+            
 
         for i in range(len(img_paths)):
             if i<len(annos):
@@ -86,7 +89,17 @@ def Paste_mask(image_path = None,
                     impurity_img = cv2.imread(impurity, cv2.IMREAD_UNCHANGED)
                     output_img, _ = paste_image_with_transform(output_img, impurity_img)
 
+                new_anno_name_instances = AUG_DST_DIR + '/labels/instances' + str(i) + '_'+ str(j) +'.txt'
+                new_img_name_instances = AUG_DST_DIR + '/images/instances' + str(i) + '_'+ str(j) + postfix
+                cv2.imwrite(new_img_name_instances, output_img)
+                with open(new_anno_name_instances, 'w') as out_file:
+
+                    for bbox in new_annos:
+                        #for box in bbox:
+                        out_file.write(" ".join(str(x) for x in bbox) + '\n')
+                out_file.close()
                 
+                                
                 output_img = adjust_illumination(output_img, alpha=random.randint(1,Contrast), beta=random.randint(0,Brightness))
                 Gaussian_blur = random.randint(1,Gaussian_blur)
                 if Gaussian_blur%2==0:
@@ -100,7 +113,7 @@ def Paste_mask(image_path = None,
                 new_anno_name = AUG_DST_DIR + '/labels/' + str(i) + '_'+ str(j) +'.txt'
                 new_img_name = AUG_DST_DIR + '/images/' + str(i) + '_'+ str(j) + postfix
                 cv2.imwrite(new_img_name, output_img)
-                print ("writing", new_img_name)
+                print ("writing",img_paths[i],"to->", new_img_name)
                 with open(new_anno_name, 'w') as out_file:
 
                     for bbox in new_annos:
@@ -308,26 +321,26 @@ if __name__ == "__main__":
     # impurities_path = '/home/jayc/jayc/CV/Dataset/experiment/100/impurities'
     # AUG_DST_DIR = '/home/jayc/jayc/CV/Dataset/experiment/100/synthetic/1'
 
-    image_path = r'/mnt2/jayc_2T/Ha/Jayc/final/withonlytrain/img'
-    anno_path = r'/mnt2/jayc_2T/Ha/Jayc/final/withonlytrain/txt'
-    transparent_image_path = '/mnt2/jayc_2T/Ha/Jayc/final/transparent'
-    impurities_path = '/mnt2/jayc_2T/Ha/Jayc/c_training/imp'
-    AUG_DST_DIR = '/mnt2/jayc_2T/Ha/Jayc/final/withonlytrain/aug'
+    image_path = r'/home/jayc/jayc/synthetic/Data/images/val'
+    anno_path = r'/home/jayc/jayc/synthetic/Data/labels/val'
+    transparent_image_path = '/home/jayc/jayc/synthetic/Data/transparent_checked'
+    impurities_path = '/home/jayc/jayc/synthetic/Data/impurities'
+    AUG_DST_DIR = 'temp'
 
 
 
 
     ## paste factors
-    pure_background_path = None # '/mnt2/jayc_2T/Ha/Jayc/c_training/purebackground'
-    Dataset_magnification = 400
-    Num_of_pasted_objects = 50
+    pure_background_path = 'background' # '/mnt2/jayc_2T/Ha/Jayc/c_training/purebackground'
+    Dataset_magnification = 100
+    Num_of_pasted_objects = 20
     Scale_of_pobjects=(0.8,1.3)
     Random_orientation = True
-    Num_of_impurities=0
-    Contrast = 2     # 1 means no change
-    Brightness = 0   #0 means no change
-    Motion_blur = 1     # 1 means no change
-    Gaussian_blur=5   # 1 means no change
+    Num_of_impurities=80
+    Contrast = 3     # 1 means no change
+    Brightness = 2   #0 means no change
+    Motion_blur = 5     # 1 means no change
+    Gaussian_blur=7   # 1 means no change
 
     #Paste_mask(image_path = IMG_DIR, anno_path = ANNO_DIR, transparent_image_path = DST_DIR, pure_background_path = None, AUG_DST_DIR = './dst', REPEATE=1, postfix = '.jpg')
     Paste_mask(image_path = image_path, 

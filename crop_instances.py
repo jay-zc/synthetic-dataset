@@ -165,9 +165,9 @@ if __name__ == "__main__":
     # ANNO_DIR = '/home/jayc/jayc/CV/Dataset/experiment/100/train/labels'  # 图像标注的文件夹
     # DST_DIR = '/home/jayc/jayc/CV/Dataset/experiment/100/transparent_img'
 
-    IMG_DIR = '/mnt2/jayc_2T/Ha/Jayc/final/img'
-    ANNO_DIR = '/mnt2/jayc_2T/Ha/Jayc/final/txt'
-    DST_DIR='/mnt2/jayc_2T/Ha/Jayc/final/transparent'
+    IMG_DIR = '../Data/images/train'
+    ANNO_DIR = '../Data/labels/train'
+    DST_DIR='../Data/transparent'
     Save_mask(ANNO_DIR, IMG_DIR, DST_DIR)
 
   
